@@ -548,6 +548,40 @@
                 grid-template-columns: 1fr;
             }
         }
+
+
+        .back-button-container {
+    margin-bottom: 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* You can adjust this for tighter spacing */
+}
+
+.back-button, .theme-toggle {
+    background-color: transparent;
+    border: none;
+    padding: 6px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+}
+
+.back-button:hover, .theme-toggle:hover {
+    background-color: #f0f0f0;
+    border-radius: 6px;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -558,7 +592,7 @@
                 <div class="logo-icon">
                     <i class="fas fa-file-contract"></i>
                 </div>
-                <span class="logo-text">DocIntel</span>
+                <span class="logo-text">InsightAgent.ai</span>
             </div>
             
             <nav class="nav-menu">
@@ -572,12 +606,24 @@
         
         <!-- Main Content Area -->
         <main class="main-content">
+
+        
             <div class="header">
                 <h1 class="welcome-title">Welcome back! </h1>
-                <button class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </button>
+                
+                <!-- Right-side controls -->
+                <div class="header-controls">
+                    <a href="role-select" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
+            
+            
             
             <!-- Action Cards -->
             <div class="card-grid">
