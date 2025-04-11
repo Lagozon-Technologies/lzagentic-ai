@@ -1,362 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <title>Modern Login Page</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
-        :root {
-            --text-color: #edf3ff;
-            --subheading-color: #97a7ca;
-            --placeholder-color: #c3cdde;
-            --primary-color: #101623;
-            --secondary-color: #283045;
-            --secondary-hover-color: #333e58;
-            --scrollbar-color: #626a7f;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            width: 768px;
-            max-width: 100%;
-            min-height: 480px;
-            text-align: center;
-            transition: filter 0.3s ease;
-        }
-
-        .container.blur-effect {
-            filter: blur(5px);
-        }
-
-        .container p {
-            font-size: 14px;
-            line-height: 20px;
-            letter-spacing: 0.3px;
-            color: var(--subheading-color);
-            margin: 20px 0;
-        }
-
-        .container a {
-            color: black;
-            font-size: 13px;
-            text-decoration: none;
-            margin: 15px 0 10px;
-        }
-
-        .container button {
-            background-color: var(--secondary-hover-color);
-            color: var(--text-color);
-            font-size: 12px;
-            padding: 10px 45px;
-            border: 1px solid transparent;
-            border-radius: 8px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .container button.hidden {
-            background-color: transparent;
-            border-color: var(--text-color);
-        }
-
-        .container button:hover {
-            background-color: var(--scrollbar-color);
-        }
-
-        .container form {
-            background-color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 40px;
-            height: 100%;
-        }
-
-        .container input {
-            background-color: #f0f0f0;
-            color: black;
-            border: none;
-            margin: 8px 0;
-            padding: 10px 15px;
-            font-size: 13px;
-            border-radius: 8px;
-            width: 100%;
-            outline: none;
-        }
-
-        .container input::placeholder {
-            color: black;
-        }
-
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .sign-in {
-            left: 0;
-            width: 50%;
-            z-index: 2;
-        }
-
-        .container.active .sign-in {
-            transform: translateX(100%);
-        }
-
-        .container select {
-            background-color: #f0f0f0;
-            color: black;
-            border: none;
-            margin: 8px 0;
-            padding: 10px 15px;
-            font-size: 13px;
-            border-radius: 8px;
-            width: 100%;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .container select::-ms-expand {
-            display: none;
-        }
-
-        .container select:hover {
-            background-color: #e0e0e0;
-        }
-
-        .container select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="black" d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-            padding-right: 30px;
-        }
-
-        .sign-up {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .container.active .sign-up {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: move 0.6s;
-        }
-
-        .form-container.sign-in h1 {
-            color: #283045;
-        }
-
-        @keyframes move {
-            0%, 49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-            50%, 100% {
-                opacity: 1;
-                z-index: 5;
-            }
-        }
-
-        .social-icons {
-            margin: 20px 0;
-        }
-
-        .social-icons a {
-            border: 1px solid var(--scrollbar-color);
-            border-radius: 20%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 3px;
-            width: 40px;
-            height: 40px;
-            color: black;
-            transition: background 0.3s;
-        }
-
-        .social-icons a:hover {
-            background-color: var(--secondary-hover-color);
-        }
-
-        .toggle-container {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            transition: all 0.6s ease-in-out;
-            border-radius: 150px 0 0 100px;
-            z-index: 1000;
-        }
-
-        .container.active .toggle-container {
-            transform: translateX(-100%);
-            border-radius: 0 150px 100px 0;
-        }
-
-        .toggle {
-            background-color: linear-gradient(to right, #1d7efd, #8f6fff);
-            height: 100%;
-            background: linear-gradient(to right, #1d7efd, #8f6fff);
-            color: var(--text-color);
-            position: relative;
-            left: -100%;
-            height: 100%;
-            width: 200%;
-            transform: translateX(0);
-            transition: all 0.6s ease-in-out;
-        }
-
-        .container.active .toggle {
-            transform: translateX(50%);
-        }
-
-        .toggle-panel {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 30px;
-            text-align: center;
-            top: 0;
-            transform: translateX(0);
-            transition: all 0.6s ease-in-out;
-        }
-
-        .toggle-left {
-            transform: translateX(-200%);
-        }
-
-        .container.active .toggle-left {
-            transform: translateX(0);
-        }
-
-        .toggle-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        .container.active .toggle-right {
-            transform: translateX(200%);
-        }
-
-        .back-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 15px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .back-button:hover {
-            background: #e0e0e0;
-        }
-
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .popup-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .popup-content button {
-            margin-top: 20px;
-            padding: 8px 20px;
-            background-color: var(--secondary-hover-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .popup-content button:hover {
-            background-color: var(--scrollbar-color);
-        }
-    </style>
+    
+    <title>Modern Login Page | AsmrProg</title>
 </head>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Dark Theme Colors */
+    --text-color: #edf3ff;
+    --subheading-color: #97a7ca;
+    --placeholder-color: #c3cdde;
+    --primary-color: #101623;
+    --secondary-color: #283045;
+    --secondary-hover-color: #333e58;
+    --scrollbar-color: #626a7f;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+    text-align: center;
+}
+
+.container p {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px;
+    color: var(--subheading-color);
+    margin: 20px 0;
+}
+
+.container a {
+    color: black;
+    font-size: 13px;
+    text-decoration: none;
+    margin: 15px 0 10px;
+}
+
+.container button {
+    background-color: var(--secondary-hover-color);
+    color: var(--text-color);
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.container button.hidden {
+    background-color: transparent;
+    border-color: var(--text-color);
+}
+
+.container button:hover {
+    background-color: var(--scrollbar-color);
+}
+
+.container form {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+}
+
+.container input {
+    background-color: #f0f0f0;;
+    color: black;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+}
+
+.container input::placeholder {
+    color: black;
+}
+
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.sign-in {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.container.active .sign-in {
+    transform: translateX(100%);
+   
+}
+
+.container select {
+    background-color: #f0f0f0;
+    color: black;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Style the dropdown arrow */
+.container select::-ms-expand {
+    display: none;
+}
+
+.container select:hover {
+    background-color: #e0e0e0;
+}
+
+/* Optional: Enhance appearance in Webkit browsers */
+.container select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="black" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    padding-right: 30px;
+}
+
+.sign-up {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.active .sign-up {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+.form-container.sign-in h1 {
+    color: #283045; /* Change this to any desired color */
+}
+
+@keyframes move {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.social-icons {
+    margin: 20px 0;
+}
+
+.social-icons a {
+    border: 1px solid var(--scrollbar-color);
+    border-radius: 20%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3px;
+    width: 40px;
+    height: 40px;
+    color: black;
+    transition: background 0.3s;
+}
+
+.social-icons a:hover {
+    background-color: var(--secondary-hover-color);
+}
+
+.toggle-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 1000;
+}
+
+.container.active .toggle-container {
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+.toggle {
+    background-color:linear-gradient(to right, #1d7efd, #8f6fff);
+    height: 100%;
+    background:linear-gradient(to right, #1d7efd, #8f6fff);
+    color: var(--text-color);
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.container.active .toggle {
+    transform: translateX(50%);
+}
+
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle-left {
+    transform: translateX(-200%);
+}
+
+.container.active .toggle-left {
+    transform: translateX(0);
+}
+
+.toggle-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.active .toggle-right {
+    transform: translateX(200%);
+}
+
+.back-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.back-button:hover {
+    background: #e0e0e0;
+}
+
+/* Blur effect */
+.blur-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: none;
+}
+
+/* Custom alert box */
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 2001;
+    max-width: 80%;
+    text-align: center;
+    display: none;
+}
+
+.custom-alert p {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 16px;
+}
+
+.custom-alert button {
+    background-color: var(--secondary-hover-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-alert button:hover {
+    background-color: var(--scrollbar-color);
+}
+</style>
+
 <body>
-    <button class="back-button" onclick="history.back()">
+    <!-- Back button in top-right corner -->
+    <button class="back-button" onclick="history.back()" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
         <i class="fa-solid fa-arrow-left"></i> Back
     </button>
 
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup-content">
-            <h2>Sign Up Information</h2>
-            <p>Dear Customers, the signup option is provided based on request to the team</p>
-            <button id="closePopup">OK</button>
-        </div>
+    <!-- Blur effect overlay -->
+    <div class="blur-effect" id="blurEffect"></div>
+    
+    <!-- Custom alert box -->
+    <div class="custom-alert" id="customAlert">
+        <p>Dear Customers, the signup option is provided based on request to the team</p>
+        <button onclick="closeAlert()">OK</button>
     </div>
 
     <div class="container" id="container">
@@ -370,10 +381,9 @@
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registeration</span>
-                <input type="text" id="nameInput" placeholder="Name">
-                <input type="email" id="emailInput" placeholder="Email">
+                <input type="email" placeholder="Email">
                 <input type="password" placeholder="Password">
-                <button type="button" id="signupBtn">Sign Up</button>
+                <button id="signup-btn">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in">
@@ -381,6 +391,7 @@
                 <h1>Sign In</h1>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
+            
                 <select name="section" id="section-dropdown" required> 
                     <option value="" disabled selected>Select Section</option>
                     <option value="Adv-HumanResources">Adv-HumanResources</option>
@@ -390,6 +401,7 @@
                     <option value="Adv-Sales">Adv-Sales</option>
                     <option value="Adv-Products">Adv-Products</option>
                 </select>
+            
                 <button type="submit">Sign In</button>
             </form>
         </div>
@@ -413,49 +425,77 @@
         const container = document.getElementById('container');
         const registerBtn = document.getElementById('register');
         const loginBtn = document.getElementById('login');
-        const signupBtn = document.getElementById('signupBtn');
-        const popupOverlay = document.getElementById('popupOverlay');
-        const closePopup = document.getElementById('closePopup');
-        const nameInput = document.getElementById('nameInput');
-        const emailInput = document.getElementById('emailInput');
-
-        registerBtn.addEventListener('click', () => {
-            container.classList.add("active");
+        const signupBtn = document.getElementById('signup-btn');
+        const blurEffect = document.getElementById('blurEffect');
+        const customAlert = document.getElementById('customAlert');
+        
+        // Prevent the container from becoming active when register button is clicked
+        registerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAlert();
         });
-
+        
         loginBtn.addEventListener('click', () => {
             container.classList.remove("active");
         });
-
-        function showPopup() {
-            container.classList.add('blur-effect');
-            popupOverlay.classList.add('active');
+        
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAlert();
+        });
+        
+        function showAlert() {
+            blurEffect.style.display = 'block';
+            customAlert.style.display = 'block';
         }
+        
+        function closeAlert() {
+            blurEffect.style.display = 'none';
+            customAlert.style.display = 'none';
+        }
+    </script>
 
-        signupBtn.addEventListener('click', showPopup);
-
-        // Show popup when typing in name or email fields
-        nameInput.addEventListener('input', () => {
-            if(nameInput.value.length > 0) {
-                showPopup();
+    <script>
+        document.querySelector(".sign-in form").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent default form submission
+        
+            const form = this;
+            const emailInput = form.querySelector('input[type="email"]').value.trim();
+            const passwordInput = form.querySelector('input[type="password"]').value.trim();
+            const sectionDropdown = form.querySelector('select').value;
+        
+            // Validation
+            if (!emailInput) {
+                alert("Please enter your email before signing in!");
+                return;
             }
-        });
-
-        emailInput.addEventListener('input', () => {
-            if(emailInput.value.length > 0) {
-                showPopup();
+            if (!passwordInput) {
+                alert("Please enter your password before signing in!");
+                return;
             }
-        });
-
-        closePopup.addEventListener('click', () => {
-            container.classList.remove('blur-effect');
-            popupOverlay.classList.remove('active');
-        });
-
-        popupOverlay.addEventListener('click', (e) => {
-            if (e.target === popupOverlay) {
-                container.classList.remove('blur-effect');
-                popupOverlay.classList.remove('active');
+            if (!sectionDropdown) {
+                alert("Please select a section before signing in!");
+                return;
+            }
+        
+            const formData = new FormData(form); // Create FormData object
+        
+            try {
+                const response = await fetch("/login", {
+                    method: "POST",
+                    body: formData
+                });
+        
+                if (response.redirected) {
+                    // Redirect user after successful login
+                    window.location.href = response.url;
+                } else {
+                    const data = await response.json();
+                    alert(data.detail); // Show error message from backend
+                }
+            } catch (error) {
+                console.error("Error during login:", error);
+                alert("Something went wrong. Please try again.");
             }
         });
     </script>
