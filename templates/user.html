@@ -620,6 +620,45 @@ html, body {
     gap: 6px;
     transition: background-color 0.2s ease;
 }
+#option-researcher {
+      accent-color: red;
+    }
+
+    /* Tooltip container */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: not-allowed;
+      color: gray;
+    }
+
+    /* Tooltip message */
+    .tooltip::after {
+      content: "not enabled for sandbox instance";
+      position: absolute;
+      bottom: 125%;
+      left: 0;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Show tooltip on hover */
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+
+    /* Disable clicking */
+    #option-researcher {
+      pointer-events: none;
+    }
 
 
 
@@ -649,7 +688,10 @@ html, body {
                 <div id="settings-options">
                     <label><input type="radio" name="settings-option" id="option-intellidoc" value="intellidoc"> Document agent</label><br>
                     <label><input type="radio" name="settings-option" id="option-db-query" value="db_query">Database agent </label><br>
-                    <label><input type="radio" name="settings-option" id="option-researcher" value="researcher"> Web agent</label><br>
+                    <label class="tooltip">
+                        <input type="radio" name="settings-option" id="option-researcher" value="researcher" checked>
+                        Web agent
+                      </label><br>
                     <label><input type="checkbox" id="option-all" value="all"> All</label>
                 </div>
                 
@@ -727,9 +769,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // ✅ Constants
 
-    // const API_BASE_URL = "http://127.0.0.1:8000";
-    const API_BASE_URL = "https://lzagentic-ai-euhtcxc8cpftdbg3.centralindia-01.azurewebsites.net";
     
+    const API_BASE_URL = "https://lzagentic-ai-euhtcxc8cpftdbg3.centralindia-01.azurewebsites.net";
     let isSubmitting = false;
         // ✅ Add these at the top with your other constants
     let mediaRecorder = null;
