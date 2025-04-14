@@ -30,9 +30,14 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.storage.docstore import SimpleDocumentStore
 import logging
 from fastapi.responses import JSONResponse
+import requests
+from langchain.agents import Tool, initialize_agent, AgentType
+from langchain.memory import ConversationBufferMemory
+from dotenv import load_dotenv
+
 
 import chromadb
-import os
+
 import json
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -113,33 +118,80 @@ def classify_intent(state: GraphState) -> str:
     return intent
 BING_API_KEY = os.getenv("BING_API_KEY")
 
+# Bing Search Tool
 def bing_search(query: str) -> str:
+    """Query Bing Search API to get summarized search results."""
+    api_key = os.getenv('BING_API_KEY')
     url = f'https://api.bing.microsoft.com/v7.0/search?q={query}'
-
-    headers = {
-        'Ocp-Apim-Subscription-Key': BING_API_KEY
-    }
-
+    headers = {'Ocp-Apim-Subscription-Key': api_key}
     response = requests.get(url, headers=headers)
-
+    
     if response.status_code == 200:
         results = response.json()
-        search_results = [f"{result['name']}: {result['url']}" for result in results.get('webPages', {}).get('value', [])]
-        return "\n".join(search_results) if search_results else "No results found."
+        summaries = []
+        for result in results.get('webPages', {}).get('value', []):
+            title = result.get('name', 'No Title')
+            snippet = result.get('snippet', 'No summary available.')
+            summaries.append(f"**{title}**: {snippet}")
+        
+        return "\n\n".join(summaries) if summaries else "No results found."
     else:
-        return f"Error in bing search: {response.status_code}"
+        return f"Error: {response.status_code}"
+
+
+bing_tool = Tool(
+    name="Bing Search",
+    func=bing_search,
+    description="Useful for general web searches."
+)
+
+
+
+tools = [bing_tool]
+
+# Initialize memory
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+# Initialize agent
+llm = ChatOpenAI(
+    api_key=OPENAI_API_KEY,
+    model="gpt-4o-mini",  
+    temperature=0.5
+)
+
+agent = initialize_agent(
+    tools=tools,
+    llm=llm,
+    agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,  # Better for conversations
+    memory=memory,
+    verbose=True
+)
+
 def researcher_node(state: GraphState) -> dict:
     """
-    Handles the researcher intent by performing a Bing search.
+    Handles the researcher intent by summarizing search results.
     """
-    user_question = state["messages"][-1].content  # Get the last user message
-    search_results = bing_search(user_question)
+    user_question = state["messages"][-1].content
+    bing=os.getenv("BING")
+    if bing =="True":
+        raw_results = agent.run(user_question)
+    else:
+        raw_results="Bing is not enabled for the sandbox instance"
+
+    summarization_prompt = f"""Summarize the following search result content into concise, informative points without listing URLs:
+
+{raw_results}
+"""
+
+    summary = llm.predict(summarization_prompt)
 
     return {
         "messages": [
-            HumanMessage(content=search_results, name="researcher")
+            HumanMessage(content=summary, name="researcher")
         ]
     }
+
+    
 def hybrid_retrieve(query, docstore, vector_index, bm25_retriever, alpha=0.5):
     """Perform hybrid retrieval using BM25 and vector-based retrieval."""
     # Get results from BM25
@@ -474,8 +526,10 @@ def conditional_edges(state: GraphState):
         # All tools are available
         if intent == "db_query":
             return "extract_tables"
+        
         elif intent == "researcher":
             return "researcher"
+            
         elif intent == "intellidoc":
             return "intellidoc"
     else:
@@ -485,6 +539,7 @@ def conditional_edges(state: GraphState):
                 return "extract_tables"
             elif intent == "researcher":
                 return "researcher"
+                 
             elif intent == "intellidoc":
                 return "intellidoc"
         else:
